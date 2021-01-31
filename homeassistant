@@ -1,0 +1,35 @@
+letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - URL=walkerfamily.house
+      - SUBDOMAINS=sonarr,radarr,lidarr,plex,ombi,nzbhydra,nzbget,books,lazylibrarian,stats,transmission,jackett,portainer,bazarr,tdarr,calibre,calibre-web,mylar,ubooquity,homeassistant
+      - VALIDATION=http
+      - EMAIL=walker.peter@gmail.com
+      - STAGING=false
+      - ONLY_SUBDOMAINS=true
+    volumes:
+      - /home/pwalker/config/letsencrypt:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+    
+=========
+
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    container_name: homeassistant
+    volumes:
+      - /home/pwalker/config/homeassistant:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    restart: always
+    network_mode: host
